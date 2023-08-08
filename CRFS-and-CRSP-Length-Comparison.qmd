@@ -4,21 +4,19 @@ format: html
 editor: visual
 ---
 
-# California Recreational Fisheries Survey (CRFS) & Copperative Recreational Sampling Program (CRSP) Length Data Comparison
+## Description
 
 The purpose of this document is to compare the length frequency distribution between the length data collected by the CDFW California Recreational Fisheries Survey (CRFS) & the Cooperative Recreational Sampling Program piloted by NOAA Fisheries and the Sportfishing Association of California (SAC).
 
-```{r}
+```{r, warning = FALSE, message = FALSE, echo = TRUE}
 
-knitr::opts_chunk$set(echo = TRUE)
-
-rm(list = ls()); graphics.off()
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = TRUE)
 library(tidyverse)
 library(data.table)
 library(ggplot2)
 
 alpha = 0.5
-theme_set(theme_classic(base_size = 12))
+theme_set(theme_classic(base_size = 20))
 
 ```
 
@@ -32,12 +30,20 @@ CRFS data was retrieved from the Recreational Fisheries Information Network (<ht
 
 **Date Range of CFRFS Data:** 01/01/2023-05/01/2023 (*needs to be updated every time data is downloaded*)
 
-**Notes about CRFS Data:** Data filtered to include only fish sampled in CA within 2023. Data filtered to include all all ports, all water areas, all fish areas, all trip types, all sources, both released and retained, groundfish, all complexes, rockfish, all speceis.
+**Notes about CRFS Data:** Data filtered to include only fish sampled in CA within 2023. Data filtered to include all all ports, all water areas, all fish areas, all trip types, all sources, both released and retained, groundfish, all complexes, rockfish, all species.
 
-```{r}
+**Cooperative Recreational Sampling Program (CRSP) Data:**
+
+CRSP data is currently being stored on Google Drive in Google Sheets: <https://docs.google.com/spreadsheets/d/1gfTqfUz6_yY_UaC8doQJY6xqRCaN7I-5W0e9DHwJnmU/edit#gid=0>
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+Import, rename, and merge the CRFS and CRSP data tables into one single data frame ('Full_Data') for species-specific comparison within management districts.
+
+```{r, warning = FALSE, message = FALSE, echo = TRUE}
 
 #Import CRSP data and filter by CDFW management region
-CRSP_Data <- read.csv("CRSP-Data-Accessed-20230807.csv")
+CRSP_Data <- read.csv("CRSP-Data-Accessed-20230808.csv")
 
 CRSP_RecFIN_port_renaming <- c("Eureka" = "Northern", "Shelter Cove" = "Mendocino", "Fort Bragg" = "Mendocino", "Bodega Bay" = "San Francisco", "Emeryville" = "San Francisco", "Half Moon Bay" = "San Francisco", "Moss Landing" = "Central", "Morro Bay" = "Central", "Avila Beach" = "Central", "Santa Barbara" = "Southern", "Oxnard" = "Southern", "Dana Point" = "Southern", "San Diego" = "Southern")
 
@@ -48,8 +54,9 @@ PacFIN_Codes <- read.csv("PAcFIN_Codes.csv")
 PacFIN_Codes <- PacFIN_Codes %>% 
   rename(PacFIN_Species_Code = PACFIN_SPECIES_CODE)
 
-CRSP_Data <- CRSP_Data %>%
-  left_join(PacFIN_Codes, by ="PacFIN_Species_Code")
+CRSP_Data <- CRSP_Data %>% 
+  merge(.,PacFIN_Codes,by = intersect('PacFIN_Species_Code','PacFIN_Species_Code'), all = F) %>%
+  select(c(PacFIN_Species_Code,RecFIN_Port_Name,Fork_Length_mm,SPECIES_NAME))
 
 CRSP_Data <- CRSP_Data %>%
   rename(RECFIN_PORT_NAME = RecFIN_Port_Name, LENGTH_MM = Fork_Length_mm)
@@ -80,6 +87,8 @@ CRFS_Data <- CRFS_Data %>%
 
 #Merge the two data types into one master dataset
 Full_Data <- rbind(CRFS_Data, CRSP_Data)
+Full_Data <- Full_Data[,c(4,1,2,3)]
+Full_Data$LENGTH_MM <- as.numeric(Full_Data$LENGTH_MM)
 
 ```
 
@@ -93,23 +102,19 @@ CDFW Management Area Include:
 4.  **Central** - Ports between the Pigeon Point to Point Conception
 5.  **Southern** - Ports between the Point Conception to US/MX Border
 
-Filter
+Filter 'Full_Data' into separate dataframes for each CDFW management region. Create tables to view number of lengths from each data set (CRFS & CRSP) by species.
 
-```{r, fig.height=20, fig.width=20}
+```{r, warning = FALSE, message = FALSE, echo = TRUE}
+
+library(modelsummary)
+library(tidyverse)
 
 #NORTHERN
 Northern <- Full_Data %>%
   group_by(RECFIN_PORT_NAME) %>%
   filter(RECFIN_PORT_NAME == "Northern")
 
-Northern_length_plot <- ggplot(Northern, aes(x = LENGTH_MM, colour = DATA_SOURCE))+
-  geom_density(lwd = 1.2, linetype = 1, alpha = 0.7) + 
-  scale_fill_manual(values = cols) +
-  facet_wrap(~ SPECIES_NAME , ncol = 2, scales = "free_y") +
-  labs(x = "Length", y = "Frequency", title = "Northern CA Management")
-ggsave("1_Northern_length_plot.pdf", width = 20, height = 20, units = "cm")
-
-
+datasummary_crosstab(SPECIES_NAME ~ DATA_SOURCE, statistic = ~ N, title = 'Northern Management Region', data = Northern)
 
 
 #MENDOCINO
@@ -117,14 +122,7 @@ Mendocino <- Full_Data %>%
   group_by(RECFIN_PORT_NAME) %>%
   filter(RECFIN_PORT_NAME == "Mendocino")
 
-Mendocino_length_plot <- ggplot(Mendocino, aes(x = LENGTH_MM, colour = DATA_SOURCE))+
-  geom_density(lwd = 1.2, linetype = 1, alpha = 0.7) + 
-  scale_fill_manual(values = cols) +
-  facet_wrap(~ SPECIES_NAME , ncol = 2, scales = "free_y") +
-  labs(x = "Length", y = "Frequency", title = "Mendocino CA Management")
-ggsave("2_Mendocino_length_plot.pdf", width = 20, height = 20, units = "cm")
-
-
+datasummary_crosstab(SPECIES_NAME ~ DATA_SOURCE, statistic = ~ N, title = 'Mendocino Management Region', data = Mendocino)
 
 
 #SAN FRANCISCO
@@ -132,14 +130,7 @@ San_Francisco <- Full_Data %>%
   group_by(RECFIN_PORT_NAME) %>%
   filter(RECFIN_PORT_NAME == "San Francisco")
 
-San_Francisco_length_plot <- ggplot(San_Francisco, aes(x = LENGTH_MM, colour = DATA_SOURCE))+
-  geom_density(lwd = 1.2, linetype = 1, alpha = 0.7) + 
-  scale_fill_manual(values = cols) +
-  facet_wrap(~ SPECIES_NAME , ncol = 2, scales = "free_y") +
-  labs(x = "Length", y = "Frequency", title = "San Francisco CA Management")
-ggsave("3_San_Francisco_length_plot.pdf", width = 20, height = 20, units = "cm")
-
-
+datasummary_crosstab(SPECIES_NAME ~ DATA_SOURCE, statistic = ~ N, title = 'San Francisco Management Region', data = San_Francisco)
 
 
 #CENTRAL
@@ -147,14 +138,7 @@ Central <- Full_Data %>%
   group_by(RECFIN_PORT_NAME) %>%
   filter(RECFIN_PORT_NAME == "Central")
 
-Central_length_plot <- ggplot(Central, aes(x = LENGTH_MM, colour = DATA_SOURCE))+
-  geom_density(lwd = 1.2, linetype = 1, alpha = 0.7) + 
-  scale_fill_manual(values = cols) +
-  facet_wrap(~ SPECIES_NAME , ncol = 2, scales = "free_y") +
-  labs(x = "Length", y = "Frequency", title = "Central CA Management")
-ggsave("4_Central_length_plot.pdf", width = 20, height = 35, units = "cm")
-
-
+datasummary_crosstab(SPECIES_NAME ~ DATA_SOURCE, statistic = ~ N, title = 'Central Management Region', data = Central)
 
 
 #SOUTHERN
@@ -162,15 +146,60 @@ Southern <- Full_Data %>%
   group_by(RECFIN_PORT_NAME) %>%
   filter(RECFIN_PORT_NAME == "Southern")
 
-Southern_length_plot <- ggplot(Southern, aes(x = LENGTH_MM, colour = DATA_SOURCE))+
+datasummary_crosstab(SPECIES_NAME ~ DATA_SOURCE, statistic = ~ N, title = 'Southern Management Region', data = Southern)
+
+```
+
+## Length Distribution Plots Comparing CRFS & CRSP Data
+
+Species-specific density distribution plots comparing species-specific CRFS & CRPS surveyed lengths. Species plots where no distribution occurs only had one specimen sampled from either CRFS or CRSP.
+
+```{r, warning = FALSE, message = FALSE, echo = TRUE, fig.height=30, fig.width=20}
+
+#NORTHERN
+Northern_length_plot <- ggplot(Northern, aes(x = LENGTH_MM, fill = DATA_SOURCE))+
+  geom_density(lwd = 1.2, linetype = 1, alpha = 0.7)+
+  scale_fill_manual(values = c("tomato","steelblue3"))+
+  facet_wrap(~SPECIES_NAME , ncol = 2, scales = "free")+
+  labs(x = "Fork Length (cm)", y = "Frequency", title = "Northern CA Management")
+print(Northern_length_plot)
+
+
+#MENDOCINO
+Mendocino_length_plot <- ggplot(Mendocino, aes(x = LENGTH_MM, fill = DATA_SOURCE))+
   geom_density(lwd = 1.2, linetype = 1, alpha = 0.7) + 
-  scale_fill_manual(values = cols) +
+  scale_fill_manual(values = c("tomato","steelblue3"))+  
   facet_wrap(~ SPECIES_NAME , ncol = 2, scales = "free_y") +
-  labs(x = "Length", y = "Frequency", title = "Southern CA Management")
-ggsave("5_Southern_length_plot.pdf", width = 20, height = 35, units = "cm")
+  labs(x = "Fork Length (cm)", y = "Frequency", title = "Mendocino CA Management")
+print(Mendocino_length_plot)
+
+
+#SAN FRANCISCO
+San_Francisco_length_plot <- ggplot(San_Francisco, aes(x = LENGTH_MM, fill = DATA_SOURCE))+
+  geom_density(lwd = 1.2, linetype = 1, alpha = 0.7) + 
+  scale_fill_manual(values = c("tomato","steelblue3"))+
+  facet_wrap(~ SPECIES_NAME , ncol = 2, scales = "free_y") +
+  labs(x = "Fork Length (cm)", y = "Frequency", title = "San Francisco CA Management")
+print(San_Francisco_length_plot)
+
+
+#CENTRAL
+Central_length_plot <- ggplot(Central, aes(x = LENGTH_MM, fill = DATA_SOURCE))+
+  geom_density(lwd = 1.2, linetype = 1, alpha = 0.7) +
+  scale_fill_manual(values = c("tomato","steelblue3"))+
+  facet_wrap(~ SPECIES_NAME , ncol = 2, scales = "free_y") +
+  labs(x = "Fork Length (cm)", y = "Frequency", title = "Central CA Management")
+print(Central_length_plot)
+
+
+#SOUTHERN
+Southern_length_plot <- ggplot(Southern, aes(x = LENGTH_MM, fill = DATA_SOURCE))+
+  geom_density(lwd = 1.2, linetype = 1, alpha = 0.7) + 
+  scale_fill_manual(values = c("tomato","steelblue3"))+
+  facet_wrap(~ SPECIES_NAME , ncol = 2, scales = "free_y") +
+  labs(x = "Fork Length (cm)", y = "Frequency", title = "Southern CA Management")
+print(Southern_length_plot)
   
   
-  
-  
-  
+
 ```

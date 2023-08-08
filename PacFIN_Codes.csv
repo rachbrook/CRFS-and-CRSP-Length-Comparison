@@ -18,8 +18,7 @@ RECFIN_SPECIES_CODE,SPECIES_NAME,SCIENTIFIC_NAME,MANAGEMENT_PLAN_ID,FISHERY_MANA
 8826010108,COPPER ROCKFISH,Sebastes caurinus,2,Groundfish,15,Rockfish,4,Nearshore Deep Demersal,COPP
 8826010149,COWCOD,Sebastes levis,2,Groundfish,15,Rockfish,11,Shelf Rockfish,CWCD
 8826010110,DARKBLOTCHED ROCKFISH,Sebastes crameri,2,Groundfish,15,Rockfish,12,Slope Rockfish,DBRK
-8826010198,DEACON ROCKFISH,Sebastes diaconus,2,Groundfish,15,Rockfish,4,Nearshore Deep Demersal,
-8826010199,DEACON/BLUE ROCKFISH UNKNOWN,Sebastes diaconus/mystinus,2,Groundfish,15,Rockfish,4,Nearshore Deep Demersal,
+8826010198,DEACON ROCKFISH,Sebastes diaconus,2,Groundfish,15,Rockfish,4,Nearshore Deep Demersal,DEAC
 8826010109,DUSKY ROCKFISH,Sebastes ciliatus,2,Groundfish,15,Rockfish,8,Other Rockfish,DUSK
 8826010167,DWARF RED ROCKFISH,Sebastes rufinanus,2,Groundfish,15,Rockfish,8,Other Rockfish,DWRF
 8826010155,FLAG ROCKFISH,Sebastes rubrivinctus,2,Groundfish,15,Rockfish,11,Shelf Rockfish,FLAG
@@ -27,8 +26,6 @@ RECFIN_SPECIES_CODE,SPECIES_NAME,SCIENTIFIC_NAME,MANAGEMENT_PLAN_ID,FISHERY_MANA
 8826010162,GOPHER ROCKFISH,Sebastes carnatus,2,Groundfish,15,Rockfish,5,Nearshore Shallow,GPHR
 8826010154,GRASS ROCKFISH,Sebastes rastrelliger,2,Groundfish,15,Rockfish,5,Nearshore Shallow,GRAS
 8826010166,GREENBLOTCHED ROCKFISH,Sebastes rosenblatti,2,Groundfish,15,Rockfish,11,Shelf Rockfish,GBLC
-8827010000,GREENLING FAMILY,Hexagrammidae,5,Not managed,9,Greenlings,6,None,
-8827010100,GREENLING GENUS,Hexagrammos,5,Not managed,9,Greenlings,6,None,
 8826010143,GREENSPOTTED ROCKFISH,Sebastes chlorostictus,2,Groundfish,15,Rockfish,11,Shelf Rockfish,GSPT
 8826010112,GREENSTRIPED ROCKFISH,Sebastes elongatus,2,Groundfish,15,Rockfish,11,Shelf Rockfish,GSRK
 8826010157,HALFBANDED ROCKFISH,Sebastes semicinctus,2,Groundfish,15,Rockfish,11,Shelf Rockfish,HBRK
@@ -46,15 +43,12 @@ RECFIN_SPECIES_CODE,SPECIES_NAME,SCIENTIFIC_NAME,MANAGEMENT_PLAN_ID,FISHERY_MANA
 8826010113,PUGET SOUND ROCKFISH,Sebastes emphaeus,5,Not managed,15,Rockfish,6,None,PUGT
 8826010137,PYGMY ROCKFISH,Sebastes wilsoni,2,Groundfish,15,Rockfish,8,Other Rockfish,PGMY
 8826010120,QUILLBACK ROCKFISH,Sebastes maliger,2,Groundfish,15,Rockfish,4,Nearshore Deep Demersal,QLBK
-8826011203,RAINBOW SCORPIONFISH,Scorpaenodes xyris,5,Not managed,15,Rockfish,6,None,
 8826010105,REDBANDED ROCKFISH,Sebastes babcocki,2,Groundfish,15,Rockfish,12,Slope Rockfish,RDBD
 8826010130,REDSTRIPE ROCKFISH,Sebastes proriger,2,Groundfish,15,Rockfish,11,Shelf Rockfish,REDS
 8826010100,ROCKFISH GENUS,Sebastes,5,Not managed,15,Rockfish,6,None,ROCK
 8826010118,ROSETHORN ROCKFISH,Sebastes helvomaculatus,2,Groundfish,15,Rockfish,11,Shelf Rockfish,RSTN
 8826010132,ROSY ROCKFISH,Sebastes rosaceus,2,Groundfish,15,Rockfish,11,Shelf Rockfish,ROSY
 8826010101,ROUGHEYE ROCKFISH,Sebastes aleutianus,2,Groundfish,15,Rockfish,12,Slope Rockfish,REYE
-8826010000,SCORPIONFISH FAMILY,Scorpaenidae,5,Not managed,15,Rockfish,6,None,
-8826010171,SEMAPHORE ROCKFISH,Sebastes melanosema,5,Not managed,15,Rockfish,6,None,
 8826010138,SHARPCHIN ROCKFISH,Sebastes zacentrus,2,Groundfish,15,Rockfish,12,Slope Rockfish,SHRP
 8826010119,SHORTBELLY ROCKFISH,Sebastes jordani,2,Groundfish,15,Rockfish,11,Shelf Rockfish,SBLY
 8826010107,SHORTRAKER ROCKFISH,Sebastes borealis,2,Groundfish,15,Rockfish,8,Other Rockfish,SRKR
@@ -69,7 +63,6 @@ RECFIN_SPECIES_CODE,SPECIES_NAME,SCIENTIFIC_NAME,MANAGEMENT_PLAN_ID,FISHERY_MANA
 8826010126,TIGER ROCKFISH,Sebastes nigrocinctus,2,Groundfish,15,Rockfish,11,Shelf Rockfish,TIGR
 8826010159,TREEFISH,Sebastes serriceps,2,Groundfish,15,Rockfish,4,Nearshore Deep Demersal,TREE
 8826010123,VERMILION ROCKFISH,Sebastes miniatus,2,Groundfish,15,Rockfish,11,Shelf Rockfish,VRML
-8826010161,WHITEBELLY ROCKFISH,Sebastes vexillaris,5,Not managed,15,Rockfish,6,None,
 8826010114,WIDOW ROCKFISH,Sebastes entomelas,2,Groundfish,15,Rockfish,11,Shelf Rockfish,WDOW
 8826010134,YELLOWEYE ROCKFISH,Sebastes ruberrimus,2,Groundfish,15,Rockfish,11,Shelf Rockfish,YEYE
 8826010131,YELLOWMOUTH ROCKFISH,Sebastes reedi,2,Groundfish,15,Rockfish,8,Other Rockfish,YMTH
