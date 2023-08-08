@@ -1,0 +1,167 @@
+---
+title: "California Recreational Fisheries Survey (CRFS) & Copperative Recreational Sampling Program (CRSP) Length Data Comparison"
+format: html
+editor: visual
+---
+
+## California Recreational Fisheries Survey (CRFS) & Copperative Recreational Sampling Program (CRSP) Length Data Comparison
+
+```{r}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+rm(list = ls()); graphics.off()
+library(tidyverse)
+library(data.table)
+library(ggplot2)
+
+alpha = 0.5
+theme_set(theme_classic(base_size = 12))
+
+
+```
+
+### Upload CRFS & CRSP length data
+
+Import most recent iteration of CRFS (<https://reports.psmfc.org/recfin/f?p=601:801:13511341349460:::::>) and CRSP (<https://docs.google.com/spreadsheets/d/1uwknAFxraD_rn_wMfiBIgWazwKI0tWv4oyoiiPA56lU/edit#gid=1569662549>) data.
+
+**Notes:** CRFS data accessed on August 7th, 2023 - includes fish caught in CA only, 2023 only, all ports, all water areas, all fish areas, all trip types, all sources, both released and retained, groundfish, all complexes, rockfish, all speceis
+
+```{r}
+
+#Import CRSP data and filter by CDFW management region
+CRSP_Data <- read.csv("CRSP-Data-Accessed-20230807.csv")
+
+CRSP_RecFIN_port_renaming <- c("Eureka" = "Northern", "Shelter Cove" = "Mendocino", "Fort Bragg" = "Mendocino", "Bodega Bay" = "San Francisco", "Emeryville" = "San Francisco", "Half Moon Bay" = "San Francisco", "Moss Landing" = "Central", "Morro Bay" = "Central", "Avila Beach" = "Central", "Santa Barbara" = "Southern", "Oxnard" = "Southern", "Dana Point" = "Southern", "San Diego" = "Southern")
+
+CRSP_Data <- CRSP_Data %>% 
+  mutate(RecFIN_Port_Name = CRSP_RecFIN_port_renaming[Port])
+
+PacFIN_Codes <- read.csv("PAcFIN_Codes.csv")
+PacFIN_Codes <- PacFIN_Codes %>% 
+  rename(PacFIN_Species_Code = PACFIN_SPECIES_CODE)
+
+CRSP_Data <- CRSP_Data %>%
+  left_join(PacFIN_Codes, by ="PacFIN_Species_Code")
+
+CRSP_Data <- CRSP_Data %>%
+  rename(RECFIN_PORT_NAME = RecFIN_Port_Name, LENGTH_MM = Fork_Length_mm)
+
+CRSP_Data <- select(CRSP_Data,'RECFIN_PORT_NAME','SPECIES_NAME','LENGTH_MM')
+
+CRSP_Data <- CRSP_Data %>%
+  mutate(DATA_SOURCE = rep("CRSP", n()))
+
+
+#Import CRFS data and filter by CDFW management region
+CRFS_Data <- read.csv("CRFS-Data-Accessed-20230807.csv")
+
+CRFS_RecFIN_port_renaming <- c("REDWOOD (HUMBOLDT COUNTY, EXCEPT SHELTER COVER AREA, AND DEL NORTE COUNTY)" = "Northern", "WINE (MENDOCINO COUNTY AND SHELTER COVE AREA IN HUMBOLDT COUNTY)" = "Mendocino", "San Francisco" = "BAY AREA (SONOMA, MARIN, SOLANO, NAPA, CONTRA COSTA, ALAMEDA, SANTA CLARA, SAN MATEO, SAN FRANCISCO COUNTIES)", "CENTRAL (SAN LUIS OBISPO, MONTEREY AND SANTA CRUZ COUNTIES)" = "Central", "CHANNEL (VENTURA AND SANTA BARBARA COUNTIES)" = "Southern", "SOUTH (SAN DIEGO, ORANGE AND LOS ANGELES COUNTIES)" = "Southern")
+
+CRFS_Data <- CRFS_Data %>% 
+  rename(LENGTH_MM = RECFIN_LENGTH_MM)
+
+CRFS_Data <- CRFS_Data %>% 
+  mutate(RECFIN_PORT_NAME = CRFS_RecFIN_port_renaming[RECFIN_PORT_NAME])
+
+CRFS_Data <- select(CRFS_Data,'RECFIN_PORT_NAME','SPECIES_NAME','LENGTH_MM')
+
+CRFS_Data <- CRFS_Data %>%
+  mutate(DATA_SOURCE = rep("CRFS", n()))
+
+
+
+#Merge the two data types
+Full_Data <- rbind(CRFS_Data, CRSP_Data)
+
+```
+
+### Filter CRFS & CRSP length data by CDFW Management Area
+
+CDFW Management Area Include:
+
+1.  **Northern** - OR/CA Border to Cape Mendocino Area
+2.  **Mendocino** - Cape Mendocino Area to Point Arena
+3.  **San Francisco** - Point Arena to Pigeon Point
+4.  **Central** - Pigeon Point to Point Conception
+5.  **Southern** - Point Conception to US/MX Border
+
+```{r, fig.height=20, fig.width=20}
+
+#NORTHERN
+Northern <- Full_Data %>%
+  group_by(RECFIN_PORT_NAME) %>%
+  filter(RECFIN_PORT_NAME == "Northern")
+
+Northern_length_plot <- ggplot(Northern, aes(x = LENGTH_MM, colour = DATA_SOURCE))+
+  geom_density(lwd = 1.2, linetype = 1, alpha = 0.7) + 
+  scale_fill_manual(values = cols) +
+  facet_wrap(~ SPECIES_NAME , ncol = 2, scales = "free_y") +
+  labs(x = "Length", y = "Frequency", title = "Northern CA Management")
+ggsave("1_Northern_length_plot.pdf", width = 20, height = 20, units = "cm")
+
+
+
+
+#MENDOCINO
+Mendocino <- Full_Data %>%
+  group_by(RECFIN_PORT_NAME) %>%
+  filter(RECFIN_PORT_NAME == "Mendocino")
+
+Mendocino_length_plot <- ggplot(Mendocino, aes(x = LENGTH_MM, colour = DATA_SOURCE))+
+  geom_density(lwd = 1.2, linetype = 1, alpha = 0.7) + 
+  scale_fill_manual(values = cols) +
+  facet_wrap(~ SPECIES_NAME , ncol = 2, scales = "free_y") +
+  labs(x = "Length", y = "Frequency", title = "Mendocino CA Management")
+ggsave("2_Mendocino_length_plot.pdf", width = 20, height = 20, units = "cm")
+
+
+
+
+#SAN FRANCISCO
+San_Francisco <- Full_Data %>%
+  group_by(RECFIN_PORT_NAME) %>%
+  filter(RECFIN_PORT_NAME == "San Francisco")
+
+San_Francisco_length_plot <- ggplot(San_Francisco, aes(x = LENGTH_MM, colour = DATA_SOURCE))+
+  geom_density(lwd = 1.2, linetype = 1, alpha = 0.7) + 
+  scale_fill_manual(values = cols) +
+  facet_wrap(~ SPECIES_NAME , ncol = 2, scales = "free_y") +
+  labs(x = "Length", y = "Frequency", title = "San Francisco CA Management")
+ggsave("3_San_Francisco_length_plot.pdf", width = 20, height = 20, units = "cm")
+
+
+
+
+#CENTRAL
+Central <- Full_Data %>%
+  group_by(RECFIN_PORT_NAME) %>%
+  filter(RECFIN_PORT_NAME == "Central")
+
+Central_length_plot <- ggplot(Central, aes(x = LENGTH_MM, colour = DATA_SOURCE))+
+  geom_density(lwd = 1.2, linetype = 1, alpha = 0.7) + 
+  scale_fill_manual(values = cols) +
+  facet_wrap(~ SPECIES_NAME , ncol = 2, scales = "free_y") +
+  labs(x = "Length", y = "Frequency", title = "Central CA Management")
+ggsave("4_Central_length_plot.pdf", width = 20, height = 35, units = "cm")
+
+
+
+
+#SOUTHERN
+Southern <- Full_Data %>%
+  group_by(RECFIN_PORT_NAME) %>%
+  filter(RECFIN_PORT_NAME == "Southern")
+
+Southern_length_plot <- ggplot(Southern, aes(x = LENGTH_MM, colour = DATA_SOURCE))+
+  geom_density(lwd = 1.2, linetype = 1, alpha = 0.7) + 
+  scale_fill_manual(values = cols) +
+  facet_wrap(~ SPECIES_NAME , ncol = 2, scales = "free_y") +
+  labs(x = "Length", y = "Frequency", title = "Southern CA Management")
+ggsave("5_Southern_length_plot.pdf", width = 20, height = 35, units = "cm")
+  
+  
+  
+  
+  
+```
