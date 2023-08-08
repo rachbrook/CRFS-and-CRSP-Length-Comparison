@@ -4,7 +4,9 @@ format: html
 editor: visual
 ---
 
-## California Recreational Fisheries Survey (CRFS) & Copperative Recreational Sampling Program (CRSP) Length Data Comparison
+# California Recreational Fisheries Survey (CRFS) & Copperative Recreational Sampling Program (CRSP) Length Data Comparison
+
+The purpose of this document is to compare the length frequency distribution between the length data collected by the CDFW California Recreational Fisheries Survey (CRFS) & the Cooperative Recreational Sampling Program piloted by NOAA Fisheries and the Sportfishing Association of California (SAC).
 
 ```{r}
 
@@ -18,14 +20,19 @@ library(ggplot2)
 alpha = 0.5
 theme_set(theme_classic(base_size = 12))
 
-
 ```
 
-### Upload CRFS & CRSP length data
+## Upload CRFS & CRSP length data
 
-Import most recent iteration of CRFS (<https://reports.psmfc.org/recfin/f?p=601:801:13511341349460:::::>) and CRSP (<https://docs.google.com/spreadsheets/d/1uwknAFxraD_rn_wMfiBIgWazwKI0tWv4oyoiiPA56lU/edit#gid=1569662549>) data.
+**California Recreational Fisheries Survey (CRFS) Data:**
 
-**Notes:** CRFS data accessed on August 7th, 2023 - includes fish caught in CA only, 2023 only, all ports, all water areas, all fish areas, all trip types, all sources, both released and retained, groundfish, all complexes, rockfish, all speceis
+CRFS data was retrieved from the Recreational Fisheries Information Network (<https://www.recfin.org/>).
+
+**Date Accessed:** August 7th, 2023 (*needs to be updated every time data is downloaded*)
+
+**Date Range of CFRFS Data:** 01/01/2023-05/01/2023 (*needs to be updated every time data is downloaded*)
+
+**Notes about CRFS Data:** Data filtered to include only fish sampled in CA within 2023. Data filtered to include all all ports, all water areas, all fish areas, all trip types, all sources, both released and retained, groundfish, all complexes, rockfish, all speceis.
 
 ```{r}
 
@@ -71,20 +78,22 @@ CRFS_Data <- CRFS_Data %>%
 
 
 
-#Merge the two data types
+#Merge the two data types into one master dataset
 Full_Data <- rbind(CRFS_Data, CRSP_Data)
 
 ```
 
-### Filter CRFS & CRSP length data by CDFW Management Area
+## Filter CRFS & CRSP length data by CDFW Management Area
 
 CDFW Management Area Include:
 
-1.  **Northern** - OR/CA Border to Cape Mendocino Area
-2.  **Mendocino** - Cape Mendocino Area to Point Arena
-3.  **San Francisco** - Point Arena to Pigeon Point
-4.  **Central** - Pigeon Point to Point Conception
-5.  **Southern** - Point Conception to US/MX Border
+1.  **Northern** - Ports between the OR/CA Border to Cape Mendocino Area
+2.  **Mendocino** - Ports between the Cape Mendocino Area to Point Arena
+3.  **San Francisco** - Ports between the Point Arena to Pigeon Point
+4.  **Central** - Ports between the Pigeon Point to Point Conception
+5.  **Southern** - Ports between the Point Conception to US/MX Border
+
+Filter
 
 ```{r, fig.height=20, fig.width=20}
 
