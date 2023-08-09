@@ -26,11 +26,11 @@ theme_set(theme_classic(base_size = 20))
 
 CRFS data was retrieved from the Recreational Fisheries Information Network (<https://www.recfin.org/>).
 
-**Date Accessed:** August 7th, 2023 (*needs to be updated every time data is downloaded*)
+**Date Accessed:** August 9th, 2023 (*needs to be updated every time data is downloaded*)
 
 **Date Range of CFRFS Data:** 01/01/2023-05/01/2023 (*needs to be updated every time data is downloaded*)
 
-**Notes about CRFS Data:** Data filtered to include only fish sampled in CA within 2023. Data filtered to include all all ports, all water areas, all fish areas, all trip types, all sources, both released and retained, groundfish, all complexes, rockfish, all species.
+**Notes about CRFS Data:** Data filtered to include only fish sampled in CA within 2023 from party/charter boats. Data filtered to include all all ports, all water areas, all fish areas, all trip types, all sources, both released and retained, groundfish, all complexes, rockfish, all species.
 
 **Cooperative Recreational Sampling Program (CRSP) Data:**
 
@@ -43,7 +43,7 @@ Import, rename, and merge the CRFS and CRSP data tables into one single data fra
 ```{r, warning = FALSE, message = FALSE, echo = TRUE}
 
 #Import CRSP data and filter by CDFW management region
-CRSP_Data <- read.csv("CRSP-Data-Accessed-20230808.csv")
+CRSP_Data <- read.csv("CRSP-Data-Accessed-20230809.csv")
 
 CRSP_RecFIN_port_renaming <- c("Eureka" = "Northern", "Shelter Cove" = "Mendocino", "Fort Bragg" = "Mendocino", "Bodega Bay" = "San Francisco", "Emeryville" = "San Francisco", "Half Moon Bay" = "San Francisco", "Moss Landing" = "Central", "Morro Bay" = "Central", "Avila Beach" = "Central", "Santa Barbara" = "Southern", "Oxnard" = "Southern", "Dana Point" = "Southern", "San Diego" = "Southern")
 
@@ -68,7 +68,7 @@ CRSP_Data <- CRSP_Data %>%
 
 
 #Import CRFS data and filter by CDFW management region
-CRFS_Data <- read.csv("CRFS-Data-Accessed-20230807.csv")
+CRFS_Data <- read.csv("CRFS-Data-Accessed-20230809.csv")
 
 CRFS_RecFIN_port_renaming <- c("REDWOOD (HUMBOLDT COUNTY, EXCEPT SHELTER COVER AREA, AND DEL NORTE COUNTY)" = "Northern", "WINE (MENDOCINO COUNTY AND SHELTER COVE AREA IN HUMBOLDT COUNTY)" = "Mendocino", "San Francisco" = "BAY AREA (SONOMA, MARIN, SOLANO, NAPA, CONTRA COSTA, ALAMEDA, SANTA CLARA, SAN MATEO, SAN FRANCISCO COUNTIES)", "CENTRAL (SAN LUIS OBISPO, MONTEREY AND SANTA CRUZ COUNTIES)" = "Central", "CHANNEL (VENTURA AND SANTA BARBARA COUNTIES)" = "Southern", "SOUTH (SAN DIEGO, ORANGE AND LOS ANGELES COUNTIES)" = "Southern")
 

@@ -114,16 +114,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="upload-crfs-crsp-length-data">Upload CRFS &amp; CRSP length data</h2>
 <p><strong>California Recreational Fisheries Survey (CRFS) Data:</strong></p>
 <p>CRFS data was retrieved from the Recreational Fisheries Information Network (<a href="https://www.recfin.org/" class="uri">https://www.recfin.org/</a>).</p>
-<p><strong>Date Accessed:</strong> August 7th, 2023 (<em>needs to be updated every time data is downloaded</em>)</p>
+<p><strong>Date Accessed:</strong> August 9th, 2023 (<em>needs to be updated every time data is downloaded</em>)</p>
 <p><strong>Date Range of CFRFS Data:</strong> 01/01/2023-05/01/2023 (<em>needs to be updated every time data is downloaded</em>)</p>
-<p><strong>Notes about CRFS Data:</strong> Data filtered to include only fish sampled in CA within 2023. Data filtered to include all all ports, all water areas, all fish areas, all trip types, all sources, both released and retained, groundfish, all complexes, rockfish, all species.</p>
+<p><strong>Notes about CRFS Data:</strong> Data filtered to include only fish sampled in CA within 2023 from party/charter boats. Data filtered to include all all ports, all water areas, all fish areas, all trip types, all sources, both released and retained, groundfish, all complexes, rockfish, all species.</p>
 <p><strong>Cooperative Recreational Sampling Program (CRSP) Data:</strong></p>
 <p>CRSP data is currently being stored on Google Drive in Google Sheets: <a href="https://docs.google.com/spreadsheets/d/1gfTqfUz6_yY_UaC8doQJY6xqRCaN7I-5W0e9DHwJnmU/edit#gid=0" class="uri">https://docs.google.com/spreadsheets/d/1gfTqfUz6_yY_UaC8doQJY6xqRCaN7I-5W0e9DHwJnmU/edit#gid=0</a></p>
 <p>--------------------------------------------------------------------------------------------------------------------</p>
 <p>Import, rename, and merge the CRFS and CRSP data tables into one single data frame (‘Full_Data’) for species-specific comparison within management districts.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Import CRSP data and filter by CDFW management region</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>CRSP_Data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"CRSP-Data-Accessed-20230808.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>CRSP_Data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"CRSP-Data-Accessed-20230809.csv"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>CRSP_RecFIN_port_renaming <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Eureka"</span> <span class="ot">=</span> <span class="st">"Northern"</span>, <span class="st">"Shelter Cove"</span> <span class="ot">=</span> <span class="st">"Mendocino"</span>, <span class="st">"Fort Bragg"</span> <span class="ot">=</span> <span class="st">"Mendocino"</span>, <span class="st">"Bodega Bay"</span> <span class="ot">=</span> <span class="st">"San Francisco"</span>, <span class="st">"Emeryville"</span> <span class="ot">=</span> <span class="st">"San Francisco"</span>, <span class="st">"Half Moon Bay"</span> <span class="ot">=</span> <span class="st">"San Francisco"</span>, <span class="st">"Moss Landing"</span> <span class="ot">=</span> <span class="st">"Central"</span>, <span class="st">"Morro Bay"</span> <span class="ot">=</span> <span class="st">"Central"</span>, <span class="st">"Avila Beach"</span> <span class="ot">=</span> <span class="st">"Central"</span>, <span class="st">"Santa Barbara"</span> <span class="ot">=</span> <span class="st">"Southern"</span>, <span class="st">"Oxnard"</span> <span class="ot">=</span> <span class="st">"Southern"</span>, <span class="st">"Dana Point"</span> <span class="ot">=</span> <span class="st">"Southern"</span>, <span class="st">"San Diego"</span> <span class="ot">=</span> <span class="st">"Southern"</span>)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
@@ -148,7 +148,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co">#Import CRFS data and filter by CDFW management region</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>CRFS_Data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"CRFS-Data-Accessed-20230807.csv"</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>CRFS_Data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"CRFS-Data-Accessed-20230809.csv"</span>)</span>
 <span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>CRFS_RecFIN_port_renaming <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"REDWOOD (HUMBOLDT COUNTY, EXCEPT SHELTER COVER AREA, AND DEL NORTE COUNTY)"</span> <span class="ot">=</span> <span class="st">"Northern"</span>, <span class="st">"WINE (MENDOCINO COUNTY AND SHELTER COVE AREA IN HUMBOLDT COUNTY)"</span> <span class="ot">=</span> <span class="st">"Mendocino"</span>, <span class="st">"San Francisco"</span> <span class="ot">=</span> <span class="st">"BAY AREA (SONOMA, MARIN, SOLANO, NAPA, CONTRA COSTA, ALAMEDA, SANTA CLARA, SAN MATEO, SAN FRANCISCO COUNTIES)"</span>, <span class="st">"CENTRAL (SAN LUIS OBISPO, MONTEREY AND SANTA CRUZ COUNTIES)"</span> <span class="ot">=</span> <span class="st">"Central"</span>, <span class="st">"CHANNEL (VENTURA AND SANTA BARBARA COUNTIES)"</span> <span class="ot">=</span> <span class="st">"Southern"</span>, <span class="st">"SOUTH (SAN DIEGO, ORANGE AND LOS ANGELES COUNTIES)"</span> <span class="ot">=</span> <span class="st">"Southern"</span>)</span>
 <span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
@@ -601,7 +601,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: left;">BLUE ROCKFISH</td>
 <td style="text-align: left;">N</td>
 <td style="text-align: right;">69</td>
-<td style="text-align: right;">38</td>
+<td style="text-align: right;">51</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">BOCACCIO</td>
@@ -649,7 +649,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: left;">COPPER ROCKFISH</td>
 <td style="text-align: left;">N</td>
 <td style="text-align: right;">71</td>
-<td style="text-align: right;">91</td>
+<td style="text-align: right;">117</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">COWCOD</td>
@@ -727,7 +727,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: left;">OLIVE ROCKFISH</td>
 <td style="text-align: left;">N</td>
 <td style="text-align: right;">15</td>
-<td style="text-align: right;">15</td>
+<td style="text-align: right;">27</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">PINKROSE ROCKFISH</td>
